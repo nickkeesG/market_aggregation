@@ -12,6 +12,9 @@ class Market:
         if equilibrium_type == "price" and utility_function == "log":
             self.aggregate = log_aggregate
         if equilibrium_type == "nash":
-            def nash_aggregate(belief_profile, endowment_profile, policy_profile, hill_climbing=False, verbose=False):
+            def nash_aggregate(belief_profile, endowment_profile, policy_profile = None, hill_climbing=False, verbose=False):
+                #the default policy profile if none are given
+                if policy_profile == None:
+                    policy_profile = [1 for b in belief_profile]
                 return best_response_dynamics(belief_profile, endowment_profile, policy_profile, self.utility_function, hill_climbing, verbose)
             self.aggregate = nash_aggregate

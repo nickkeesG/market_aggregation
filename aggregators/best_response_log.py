@@ -4,7 +4,7 @@ def get_best_response_log(p_hat, q_hat, belief, endowment, policy):
     #The math below assumes that the agent initially prefers alpha securities. If that is not the case, the math is very similar, but it's just easier to exploit the symmetry of the securities and solve assuming it prefers alpha securities
     initial_price = p_hat / (p_hat + q_hat)
     if not belief >= initial_price:
-        s_b, s_a = get_best_response(q_hat, p_hat, (1-belief), endowment, policy)
+        s_b, s_a = get_best_response_log(q_hat, p_hat, (1-belief), endowment, policy)
         return s_a, s_b
 
     C = p_hat * q_hat / (2*endowment)

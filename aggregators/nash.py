@@ -4,8 +4,7 @@ from .best_response_log import get_best_response_log
 
 EPSILON_1 = 0.000001 #Artificially add this to p_hat & q_hat, as if an extra agent were investing this in both securities
 EPSILON_2 = 0.000001 #stop when the difference between current and preferred strategy drops below this
-MAX_STEP = 100000   #maximum number of steps before quiting best response
-STEP_SIZE = 1/50    #parameter for hill climbing
+MAX_STEP = 10000   #maximum number of steps before quiting best response
 
 def init_investment_profile(length):
     investment_profile_a = [0.5 for i in range(length)]                   
@@ -14,6 +13,7 @@ def init_investment_profile(length):
     return investment_profile_a, investment_profile_b
 
 def best_response_dynamics(belief_profile, endowment_profile, policy_profile, utility, hill_climbing, verbose):
+    STEP_SIZE = 1/50    #parameter for hill climbing
 
     investment_profile_a, investment_profile_b = init_investment_profile(len(belief_profile))
 
@@ -22,7 +22,8 @@ def best_response_dynamics(belief_profile, endowment_profile, policy_profile, ut
     elif utility == "log":
         get_best_response = get_best_response_log
     else:
-        return "ERROR, please give a valid utility function"
+        print("ERROR, please give a valid utility function")
+        return "ERROR"
 
     if hill_climbing == False:
         STEP_SIZE = 1 
@@ -33,7 +34,11 @@ def best_response_dynamics(belief_profile, endowment_profile, policy_profile, ut
         continue_best_response = False
 
         if idx > MAX_STEP:
-            return "ERROR, best response failed to converge"
+            if hill_climbing:
+                print( "ERROR, best response failed to converge")
+                return None
+            else:
+                return best_response_dynamics(belief_profile, endowment_profile, policy_profile, utility, True, verbose)
 
         order = [i for i in range(len(belief_profile))]
         random.shuffle(order)
@@ -65,4 +70,4 @@ def best_response_dynamics(belief_profile, endowment_profile, policy_profile, ut
     p_hat = sum([investment_profile_a[j]*endowment_profile[j] for j in range(len(investment_profile_a))])
     q_hat = sum([investment_profile_b[j]*endowment_profile[j] for j in range(len(investment_profile_b))])
 
-    return p_hat / (p_hat + q_hat), strats
+    return p_hat / (p_hat + q_hat) #, strats

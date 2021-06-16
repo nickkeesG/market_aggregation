@@ -10,4 +10,4 @@ def lin_aggregate(belief_profile, endowment_profile):
         p += endowment_profile[i]
         if belief_profile[i] <= p:
             return belief_profile[i]
-    return "ERROR, either endowments don't sum to one, or an agent has a belief greater than one."
+    print("ERROR, either endowments don't sum to one, or an agent has a belief greater than one.")
